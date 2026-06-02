@@ -537,6 +537,79 @@
     border: 1px solid rgba(91,156,246,.2);
   }
 
+  /* ── FONTES ── */
+  .fonte-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fonte-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    transition: border-color .15s, background .15s;
+  }
+  .fonte-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg3);
+  }
+  .fonte-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .fonte-sigla {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fc);
+    background: color-mix(in srgb, var(--fc) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fc) 20%, transparent);
+    border-radius: 6px;
+    padding: 4px 9px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .fonte-nome {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 3px;
+  }
+  .fonte-detalhe {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .fonte-desc {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .fonte-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .fonte-link:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background: var(--bg3);
+  }
+
   /* ── FOOTER ── */
   .guide-footer {
     margin-top: 60px;
@@ -636,6 +709,17 @@
           <span class="dso-pill">verificação</span>
         </div>
         <div class="dso-sub">Mapeamento das diretrizes do guia às 10 categorias de vulnerabilidade mais críticas de 2025</div>
+      </div>
+      <span class="dso-arrow">→</span>
+    </div>
+
+    <div class="devsecops-card" onclick="openFontes()" style="margin-top:6px">
+      <div class="dso-left">
+        <div class="dso-label">
+          Fontes utilizadas
+          <span class="dso-pill">referências</span>
+        </div>
+        <div class="dso-sub">Normas, legislação, frameworks e guias que fundamentam as diretrizes deste guia</div>
       </div>
       <span class="dso-arrow">→</span>
     </div>
@@ -747,8 +831,170 @@
   <!-- FOOTER -->
   <footer class="guide-footer">
     <p>Guia de diretrizes de segurança · TCC · UFSC · 2026</p>
-    <p>Fontes: ISO 27001 · NIST CSF · OWASP · LGPD · PPSI/Gov · TCU</p>
+    <p style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;" onclick="openFontes()">Fontes utilizadas →</p>
   </footer>
+
+  <!-- ══════════════════════════════════
+       FONTES UTILIZADAS
+  ══════════════════════════════════ -->
+  <div id="screen-fontes" class="screen">
+    <button class="back-btn" onclick="goHome()"> Voltar ao mapa</button>
+
+    <div style="margin-bottom:28px">
+      <h2 style="font-size:20px;font-weight:300;color:var(--text);letter-spacing:-.02em;margin-bottom:8px;">Fontes utilizadas</h2>
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;max-width:620px;">Normas, legislação, frameworks e guias técnicos que fundamentam as diretrizes apresentadas neste guia. Os links levam aos documentos originais de cada fonte.</p>
+    </div>
+
+    <!-- Grupo 1 -->
+    <div class="section-label">Legislação nacional</div>
+    <div class="fonte-group">
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-teal)">LGPD</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">Lei Geral de Proteção de Dados Pessoais</div>
+            <div class="fonte-detalhe">Lei nº 13.709/2018 · Brasil</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Estabelece as bases legais para o tratamento de dados pessoais no Brasil, incluindo os princípios de finalidade, necessidade, segurança e responsabilização que orientam as diretrizes de privacidade do guia.</div>
+        <a class="fonte-link" href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+    </div>
+
+    <!-- Grupo 2 -->
+    <div class="section-label" style="margin-top:24px">Normas internacionais</div>
+    <div class="fonte-group">
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-blue)">ISO</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">ABNT NBR ISO/IEC 27001:2022</div>
+            <div class="fonte-detalhe">Segurança da informação — Sistemas de gestão · ABNT, 2022</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Define os requisitos para estabelecimento, implementação e melhoria contínua de um sistema de gestão de segurança da informação. Fundamenta as diretrizes de controle de acesso, gestão de vulnerabilidades e rastreabilidade do guia.</div>
+        <a class="fonte-link" href="https://www.abntcatalogo.com.br/norma.aspx?ID=000000000005298" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+    </div>
+
+    <!-- Grupo 3 -->
+    <div class="section-label" style="margin-top:24px">Frameworks de segurança</div>
+    <div class="fonte-group">
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-purple)">NIST</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">NIST Cybersecurity Framework 2.0</div>
+            <div class="fonte-detalhe">National Institute of Standards and Technology · 2024</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Framework orientado a resultados de gestão de risco cibernético, organizado nas funções Governar, Identificar, Proteger, Detectar, Responder e Recuperar. Contribui especialmente para as diretrizes de arquitetura segura e gestão de vulnerabilidades.</div>
+        <a class="fonte-link" href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-coral)">OWASP</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">OWASP Secure Coding Practices</div>
+            <div class="fonte-detalhe">OWASP Foundation · v2.0.1</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Guia de referência de práticas de codificação segura organizado por categorias técnicas. Fundamenta as diretrizes de validação de entradas, tratamento de erros, gestão de sessões e criptografia do guia.</div>
+        <a class="fonte-link" href="https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-coral)">OWASP</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">OWASP Secure by Design Framework</div>
+            <div class="fonte-detalhe">OWASP Foundation · v0.5 · 2025</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Framework voltado a decisões de design-time para incorporar segurança na arquitetura antes da codificação. Fundamenta as diretrizes de modelagem de ameaças, redução de superfície de ataque e segurança por padrão.</div>
+        <a class="fonte-link" href="https://owasp.org/www-project-secure-by-design/" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-coral)">OWASP</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">OWASP Top 10 — 2025</div>
+            <div class="fonte-detalhe">OWASP Foundation · 2025</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Lista das dez categorias de vulnerabilidades mais críticas em aplicações web, utilizada neste guia como instrumento de verificação de cobertura. Orienta a etapa de validação das diretrizes frente às ameaças mais recorrentes em produção.</div>
+        <a class="fonte-link" href="https://owasp.org/Top10/" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-coral)">OWASP</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">OWASP Application Security Verification Standard (ASVS)</div>
+            <div class="fonte-detalhe">OWASP Foundation · v5.0.0 · 2025</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Padrão de verificação de segurança de aplicações que define requisitos técnicos específicos e verificáveis, organizados por nível de maturidade. Utilizado como instrumento independente de validação do guia.</div>
+        <a class="fonte-link" href="https://owasp.org/www-project-application-security-verification-standard/" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+    </div>
+
+    <!-- Grupo 4 -->
+    <div class="section-label" style="margin-top:24px">Guias do Governo Federal</div>
+    <div class="fonte-group">
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-amber)">PPSI</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">Guia de Requisitos Mínimos de Privacidade e Segurança da Informação para Aplicativos Móveis</div>
+            <div class="fonte-detalhe">Secretaria de Governo Digital · PPSI · v2.0 · 2023</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Guia elaborado especificamente para o contexto de aplicativos governamentais, incorporando os princípios da LGPD em recomendações técnicas concretas. Fundamenta as diretrizes de privacidade por design, criptografia e comunicação segura.</div>
+        <a class="fonte-link" href="https://www.gov.br/governodigital/pt-br/seguranca-e-protecao-de-dados/guias/guia_requisitos_minimos_apps_moveis.pdf" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-amber)">PPSI</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">Guia do Framework de Privacidade e Segurança da Informação</div>
+            <div class="fonte-detalhe">Secretaria de Governo Digital · PPSI · 2024</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Guia de referência para implementação do Programa de Privacidade e Segurança da Informação na Administração Pública Federal, com orientações técnicas alinhadas à LGPD e a frameworks internacionais.</div>
+        <a class="fonte-link" href="https://www.gov.br/governodigital/pt-br/seguranca-e-protecao-de-dados/guias" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+      <div class="fonte-card">
+        <div class="fonte-header">
+          <div class="fonte-sigla" style="--fc:var(--accent-amber)">TCU</div>
+          <div class="fonte-meta">
+            <div class="fonte-nome">Boas Práticas em Segurança da Informação</div>
+            <div class="fonte-detalhe">Tribunal de Contas da União · 4ª edição · 2012</div>
+          </div>
+        </div>
+        <div class="fonte-desc">Guia de referência do TCU sobre boas práticas de segurança da informação no setor público, com orientações sobre controle de acesso, gestão de incidentes e rastreabilidade de ações em sistemas governamentais.</div>
+        <a class="fonte-link" href="https://portal.tcu.gov.br/biblioteca-digital/boas-praticas-em-seguranca-da-informacao.htm" target="_blank" rel="noopener">Acessar documento ↗</a>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;padding:16px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text-2);line-height:1.7;">
+      <strong style="color:var(--text-3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:6px;">Nota sobre os links</strong>
+      Os links acima apontam para os documentos originais de cada fonte. Caso algum link esteja desatualizado, os documentos podem ser encontrados nos portais oficiais das respectivas organizações.
+    </div>
+
+  </div>
 
 </div><!-- /shell -->
 
@@ -1082,6 +1328,15 @@ function openOwasp() {
      <span class="active">cobertura owasp top 10</span>`
   );
   showScreen('screen-owasp');
+}
+
+function openFontes() {
+  setBreadcrumb(
+    `<span onclick="goHome()">início</span>
+     <span class="sep">/</span>
+     <span class="active">fontes utilizadas</span>`
+  );
+  showScreen('screen-fontes');
 }
 </script>
 </body>
