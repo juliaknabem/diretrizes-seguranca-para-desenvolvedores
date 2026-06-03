@@ -696,7 +696,7 @@
       </div>
       <div class="phase-card" style="--phase-color: var(--accent-coral)" onclick="openPhase('implantacao')">
         <div class="phase-num">05</div>
-        <div class="phase-count">4 diretrizes</div>
+        <div class="phase-count">5 diretrizes</div>
         <div class="phase-name">Implantação e manutenção</div>
         <div class="phase-desc">Gestão de vulnerabilidades, incidentes e monitoramento</div>
       </div>
@@ -805,7 +805,7 @@
       <div class="owasp-row">
         <div class="owasp-cell"><span class="owasp-id">A08</span></div>
         <div class="owasp-cell owasp-vuln">Falhas na integridade de software ou dados</div>
-        <div class="owasp-cell">Identificação e correção de vulnerabilidades</div>
+        <div class="owasp-cell">Verificação de integridade de artefatos de software</div>
         <div class="owasp-cell"><span class="status-added">+ adicionada</span></div>
       </div>
       <div class="owasp-row">
@@ -824,7 +824,7 @@
 
     <div style="margin-top: 20px; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text-2); line-height: 1.7;">
       <strong style="color:var(--text-3); font-family: var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:6px;">Limitações documentadas</strong>
-      A02 é parcialmente coberta pois configurações de infraestrutura e ambiente de execução estão fora do escopo do guia. A03 é parcialmente coberta pois a verificação de integridade de artefatos de pipeline depende de configurações de infraestrutura que extrapolam o escopo de atuação da equipe de desenvolvimento.
+      A02 é parcialmente coberta pois configurações de infraestrutura e ambiente de execução estão fora do escopo do guia. A03 é parcialmente coberta pois a verificação de integridade de artefatos de pipeline depende de configurações de infraestrutura que podem extrapolar o escopo de atuação da equipe de desenvolvimento.
     </div>
   </div>
 
@@ -1204,6 +1204,13 @@ const phases = {
         refs: ['ISO 27001 — 8.15, 8.16', 'NIST CSF — DE', 'LGPD art. 37', 'PPSI 2024'],
         why: 'Logs são a principal fonte de evidência em caso de incidente e o mecanismo de detecção precoce de ataques em andamento. A LGPD (art. 37) exige que organizações mantenham registros das operações de tratamento de dados pessoais, o que depende de logs de auditoria adequados. A ausência de monitoramento é a causa direta das falhas de registro e alerta de segurança (OWASP A09) e impede a detecção de comportamentos anômalos associados a outros tipos de ataque.',
         exemplo: '// Eventos que DEVEM ser logados:\n// ✓ Tentativas de login (sucesso e falha)\n// ✓ Alterações de permissão ou papel\n// ✓ Acesso a dados sensíveis\n// ✓ Erros de autenticação em APIs\n// ✓ Falhas de validação de entrada\n// ✓ Ações administrativas\n// ✓ Falhas de conexão TLS\n\n// Eventos que NÃO devem ser logados:\n// ✗ Senhas (mesmo em texto cifrado)\n// ✗ Tokens de sessão completos\n// ✗ Dados pessoais sensíveis (CPF, cartão)\n\n// Estrutura recomendada (JSON estruturado):\n// {"ts":"2026-06-01T14:23:01Z",\n//  "event":"login_failed",\n//  "user_id":"u_8f3a",\n//  "ip":"200.x.x.x",\n//  "ref":"evt_a3f9"}'
+      },
+      {
+        name: 'Verificação de integridade de artefatos de software',
+        hint: 'Garanta que artefatos de build, dependências e atualizações não foram adulterados antes de serem implantados',
+        refs: ['OWASP Top 10 — A08', 'NIST CSF', 'ISO 27001 — 8.8'],
+        why: 'A ausência de verificação de integridade permite que artefatos adulterados — imagens de container comprometidas, dependências com código malicioso injetado ou atualizações não autenticadas — sejam implantados em produção sem detecção. Esse vetor é especialmente relevante em pipelines automatizados de CI/CD, onde a cadeia de suprimentos de software é extensa e nem sempre auditada.',
+        exemplo: '// 1. Lockfiles — fixe versões exatas\n// poetry.lock, package-lock.json, Gemfile.lock\n// Versione o lockfile junto com o código\n// Nunca use ranges amplos em produção (^, ~, *)\n\n// 2. Checksums de dependências\n// pip install --require-hashes -r requirements.txt\n// npm ci  (usa package-lock, não package.json)\n\n// 3. Assinatura de imagens de container\n// docker trust sign minha-imagem:v1.0\n// export DOCKER_CONTENT_TRUST=1\n\n// 4. Verificação no pipeline (GitHub Actions)\n// - name: Verify image signature\n//   run: cosign verify minha-imagem:v1.0 \\\n//        --certificate-identity=... \\\n//        --certificate-oidc-issuer=...'
       }
     ]
   }
