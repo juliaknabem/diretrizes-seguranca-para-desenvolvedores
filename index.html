@@ -669,7 +669,7 @@
     <div class="phase-grid">
       <div class="phase-card" style="--phase-color: var(--accent-teal)" onclick="openPhase('requisitos')">
         <div class="phase-num">01</div>
-        <div class="phase-count">3 diretrizes</div>
+        <div class="phase-count">4 diretrizes</div>
         <div class="phase-name">Requisitos</div>
         <div class="phase-desc">Privacidade, minimização de dados e consentimento</div>
       </div>
@@ -681,7 +681,7 @@
       </div>
       <div class="phase-card" style="--phase-color: var(--accent-purple)" onclick="openPhase('codificacao')">
         <div class="phase-num">03</div>
-        <div class="phase-count">8 diretrizes</div>
+        <div class="phase-count">10 diretrizes</div>
         <div class="phase-name">Codificação</div>
         <div class="phase-desc">Autenticação, criptografia, validação e codificação segura</div>
       </div>
@@ -696,7 +696,7 @@
       </div>
       <div class="phase-card" style="--phase-color: var(--accent-coral)" onclick="openPhase('implantacao')">
         <div class="phase-num">05</div>
-        <div class="phase-count">5 diretrizes</div>
+        <div class="phase-count">7 diretrizes</div>
         <div class="phase-name">Implantação e manutenção</div>
         <div class="phase-desc">Dependências, monitoramento, incidentes e integridade</div>
       </div>
@@ -1026,6 +1026,13 @@ const phases = {
         exemplo: '// Privacy by default — configurações padrão\n// ✓ Coleta de localização: DESATIVADA por padrão\n// ✓ Notificações: DESATIVADAS por padrão\n// ✓ Compartilhamento de dados: DESATIVADO por padrão\n// ✓ Perfil/histórico: PRIVADO por padrão\n//\n// Privacy by design — decisões arquiteturais\n// ✓ Dados de log anonimizados por padrão\n// ✓ Expiração automática de tokens de consentimento\n// ✓ Mecanismo de exclusão de conta acessível\n// ✓ Separação entre dados de identidade e dados de uso\n// ✓ Minimização do escopo de cada componente\n//   (cada serviço acessa apenas os dados que precisa)'
       },
       {
+        name: 'Codificação segura e padrões OWASP',
+        hint: 'Defina nos requisitos que o desenvolvimento deve seguir boas práticas de codificação segura e referencie os padrões OWASP como guia de implementação',
+        refs: ['OWASP SCP', 'PPSI 2023', 'PPSI 2024', 'ISO 27001 — 8.28'],
+        why: 'Estabelecer nos requisitos que o projeto adotará padrões de codificação segura — como o OWASP Secure Coding Practices — funciona como requisito não funcional que orienta toda a fase de implementação. Sem essa definição explícita, práticas seguras dependem do conhecimento individual de cada desenvolvedor, tornando a segurança inconsistente entre módulos e equipes. Em aplicativos governamentais, que são alvos frequentes de ataques por concentrarem dados sensíveis de cidadãos, essa orientação é especialmente relevante.',
+        exemplo: '// Requisito não funcional de segurança — exemplo\n// a incluir no documento de requisitos do projeto:\n//\n// "O desenvolvimento deve seguir as práticas de\n//  codificação segura definidas no OWASP Secure\n//  Coding Practices (SCP) versão 2.0.1.\n//  Especificamente, devem ser observadas as\n//  categorias:\n//  - Validação de entradas\n//  - Autenticação e gestão de senhas\n//  - Gestão de sessões\n//  - Controle de acesso\n//  - Práticas criptográficas\n//  - Tratamento de erros e logging\n//  - Proteção de dados\n//\n//  Referência: owasp.org/www-project-secure-coding-practices-quick-reference-guide/"'
+      },
+      {
         name: 'Gestão de consentimento e direitos do titular',
         hint: 'Implemente mecanismos para registro do consentimento e para que titulares possam exercer seus direitos previstos na LGPD',
         refs: ['LGPD art. 7º, 8º, 17–22', 'PPSI 2023', 'PPSI 2024'],
@@ -1137,6 +1144,20 @@ const phases = {
         exemplo: '// SQL Injection — queries parametrizadas\n// ✗ NÃO:\nquery = "SELECT * FROM users WHERE id = " + user_id\n\n// ✓ SIM (parametrizado):\nquery = "SELECT * FROM users WHERE id = ?"\ncursor.execute(query, (user_id,))\n\n// XSS — encoding de saída\n// ✗ NÃO: innerHTML = user_input\n// ✓ SIM: textContent = user_input (encoding automático)\n// Em templates: usar {{ var | escape }} ou equivalente\n\n// CSRF — token por formulário\n// ✓ Gerar token único por sessão\n// ✓ Validar token em toda requisição POST/PUT/DELETE\n// ✓ Usar SameSite=Strict em cookies de sessão'
       },
       {
+        name: 'Armazenamento seguro de credenciais e segredos',
+        hint: 'Senhas, tokens e chaves de API nunca devem aparecer no código-fonte, arquivos de configuração versionados ou logs',
+        refs: ['OWASP SCP', 'OWASP SbD', 'PPSI 2024', 'ISO 27001 — 8.10'],
+        why: 'Credenciais expostas em repositórios são uma das causas mais comuns e graves de incidentes de segurança. Uma vez que um segredo é commitado — mesmo que removido depois — ele pode ter sido clonado, exportado ou indexado por ferramentas de busca. A correção retroativa é lenta e custosa. O uso de variáveis de ambiente e cofres de segredos (vaults) elimina esse risco na origem e é aplicável diretamente na fase de codificação.',
+        exemplo: '// ✗ NÃO faça (jamais commitar):DB_PASSWORD = "minhasenha123"\nAPI_KEY = "sk-proj-abc123..."\n\n// ✓ Use variáveis de ambiente:\nimport os\nDB_PASSWORD = os.environ.get("DB_PASSWORD")\nAPI_KEY = os.environ.get("API_KEY")\n\n// Arquivo .env (NUNCA versionar):\n// DB_PASSWORD=minhasenha123\n\n// .gitignore — adicionar obrigatoriamente:\n// .env\n// *.env\n// config/secrets.yml\n\n// Em produção — use cofre de segredos:\n// AWS Secrets Manager, HashiCorp Vault, Azure Key Vault, GCP Secret Manager\n\n// Detecção automática no pipeline:\n// Gitleaks ou TruffleHog no pre-commit hook'
+      },
+      {
+        name: 'Resposta a incidentes de segurança',
+        hint: 'Implemente na fase de codificação os mecanismos técnicos que viabilizam a resposta a incidentes: logs estruturados, endpoints de revogação e isolamento de componentes comprometidos',
+        refs: ['LGPD art. 48', 'ISO 27001 — 5.26', 'NIST CSF — RS', 'PPSI 2024'],
+        why: 'A resposta a incidentes possui uma dimensão técnica que precisa ser implementada no código — não apenas planejada como processo. Sem logs estruturados, sem mecanismo de revogação de tokens, sem capacidade de isolar um componente comprometido, o plano de resposta torna-se inviável na prática. Esta diretriz foi classificada com ressalva na matriz de priorização: a parte técnica (logs, alertas, mecanismos de revogação) é implementável pelo desenvolvedor nas fases de codificação e implantação; a parte de processo organizacional está fora do escopo do guia.',
+        exemplo: '// Mecanismos técnicos para resposta a incidentes a implementar na fase de codificação:\n// 1. Revogação de tokens/sessões em massa\n//    endpoint: POST /admin/revogar-todas-sessões\n//    (para uso em caso de comprometimento)\n// 2. Isolamento de conta comprometida\n//    campo: usuario.bloqueado = true\n//    verificado em cada requisição autenticada\n// 3. Logs estruturados com correlação\n//    cada requisição com request_id rastreável\n//    permite reconstruir a linha do tempo do ataque\n// 4. Modo de manutenção controlado\n//    capacidade de desativar módulos sem derrubar\n//    o sistema inteiro (separação de responsabilidades)\n// 5. Notificação à ANPD (art. 48 LGPD)\n//    incidente com dados pessoais → comunicar\n//    à ANPD em até 72h após a ciência'
+      },
+      {
         name: 'Tratamento seguro de erros e logs',
         hint: 'Erros não devem expor detalhes internos ao usuário; logs devem registrar eventos de segurança sem armazenar dados sensíveis',
         refs: ['OWASP SCP', 'ISO 27001 — 8.15', 'TCU 2012', 'PPSI 2024'],
@@ -1177,6 +1198,20 @@ const phases = {
     objetivo: 'Garantir que dependências sejam monitoradas continuamente, que vulnerabilidades sejam corrigidas de forma sistemática, que a integridade dos artefatos seja verificada e que incidentes sejam detectados e respondidos de forma organizada.',
     ameacas: ['Dependências com CVEs surgidos após o deploy inicial', 'Artefatos de build adulterados sem detecção', 'Incidentes sem plano de resposta ou notificação à ANPD', 'Comportamentos anômalos não detectados por ausência de monitoramento'],
     diretrizes: [
+      {
+        name: 'Identificação e correção de vulnerabilidades',
+        hint: 'Estabeleça um processo sistemático para rastrear novas vulnerabilidades nos componentes em produção e corrigi-las dentro de prazos definidos por severidade',
+        refs: ['ISO 27001 — 8.8', 'NIST CSF', 'PPSI 2024', 'TCU 2012'],
+        why: 'Vulnerabilidades não corrigidas são vetores diretos de comprometimento. Em aplicativos governamentais, que são alvos frequentes de ataques, a janela de tempo entre a publicação de uma CVE e sua exploração ativa é cada vez menor. Um processo formal garante que essa janela seja minimizada de forma sistemática e rastreável, e não apenas reativa. Esta diretriz é também o que permite ao guia endereçar parcialmente o OWASP A08 (integridade de software), junto com a diretriz de verificação de artefatos.',
+        exemplo: '// Processo de identificação e correção\n// 1. Fontes de monitoramento de CVEs:\n//    nvd.nist.gov · cvedetails.com\n//    Alertas do Dependabot / Snyk\n//    Boletins das linguagens e frameworks usados\n\n// 2. Classificação por severidade (CVSS):\n//    Crítica (9.0–10.0) → patch em 24h\n//    Alta    (7.0–8.9)  → patch em 7 dias\n//    Média   (4.0–6.9)  → patch em 30 dias\n//    Baixa   (0.1–3.9)  → próximo ciclo planejado\n\n// 3. Fluxo de correção:\n//    CVE identificada → avaliar impacto no sistema\n//    → branch de correção → testes de segurança\n//    → deploy controlado → verificar resolução\n//    → documentar no registro de vulnerabilidades'
+      },
+      {
+        name: 'Resposta a incidentes de segurança',
+        hint: 'Mantenha um plano de resposta atualizado com procedimentos de contenção, erradicação e notificação à ANPD em caso de incidente com dados pessoais',
+        refs: ['LGPD art. 48', 'ISO 27001 — 5.26', 'NIST CSF — RS', 'PPSI 2024'],
+        why: 'Um plano de resposta definido antecipadamente reduz o tempo de contenção e o impacto de uma violação. Sem esse plano, equipes agem de forma reativa e desorganizada, ampliando o dano. A LGPD (art. 48) estabelece obrigação de comunicação à ANPD em caso de incidente com dados pessoais, o que torna esta diretriz tanto técnica quanto legal para aplicativos governamentais. Esta é a dimensão de processo da diretriz — os mecanismos técnicos que a viabilizam são implementados na fase de codificação.',
+        exemplo: '// Plano de resposta — fases mínimas:\n// 1. DETECTAR\n//    Alertas de monitoramento acionados\n//    Canal de reporte definido para a equipe\n\n// 2. CONTER\n//    Isolar componente comprometido\n//    Revogar credenciais e sessões afetadas\n//    Bloquear vetores de ataque identificados\n\n// 3. ERRADICAR\n//    Corrigir causa raiz\n//    Aplicar patch ou redesenhar o controle\n\n// 4. RECUPERAR\n//    Restaurar serviço de forma controlada\n//    Monitorar por recorrência\n\n// 5. COMUNICAR (obrigação LGPD art. 48)\n//    Notificar ANPD em até 72h após ciência\n//    Notificar titulares afetados quando necessário\n\n// 6. APRENDER\n//    Documentar e atualizar controles'
+      },
       {
         name: 'Gestão de dependências e bibliotecas',
         hint: 'Monitore continuamente as dependências em produção e trate novas CVEs com a mesma urgência que bugs críticos',
